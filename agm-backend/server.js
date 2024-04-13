@@ -23,12 +23,12 @@ require("dotenv").config({
 // Middlewares
 
 // ENABLE CORS
-app.use(cors({ credentials: true, origin: "http://localhost:3000" }));
+app.use(cors({ credentials: true, origin: "*" }));
 
 // important middlewares
-app.use(helmet({ contentSecurityPolicy: false }));
+// app.use(helmet({ contentSecurityPolicy: false }));
 app.use(compression());
-app.use(morgan("combined"));
+app.use(morgan("short"));
 
 // Express Body Parser
 app.use(express.urlencoded({ extended: true }));
