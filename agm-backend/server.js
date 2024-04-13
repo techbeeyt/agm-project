@@ -26,7 +26,7 @@ require("dotenv").config({
 app.use(cors({ credentials: true, origin: "http://localhost:3000" }));
 
 // important middlewares
-app.use(helmet());
+app.use(helmet({ contentSecurityPolicy: false }));
 app.use(compression());
 app.use(morgan("combined"));
 
