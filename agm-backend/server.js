@@ -23,7 +23,7 @@ require("dotenv").config({
 // Middlewares
 
 // ENABLE CORS
-app.use(cors({ credentials: true, origin: "localhost" }));
+app.use(cors({ credentials: true, origin: "http://localhost:3000" }));
 
 // important middlewares
 app.use(helmet());
