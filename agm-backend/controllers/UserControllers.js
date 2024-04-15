@@ -90,6 +90,78 @@ const userController = {
       });
     }
   },
+
+  async getStates(req, res) {
+    try {
+      const states = await MarketData.distinct("stateName");
+      console.log("states", states);
+      res.status(200).json({
+        success: true,
+        message: "Received States",
+        data: states,
+      });
+    } catch (error) {
+      console.log(error);
+    }
+  },
+
+  async getAllDistricts(req, res) {
+    try {
+      const data = await MarketData.distinct("districtName");
+
+      res.status(200).json({
+        success: true,
+        message: "Received All Districts",
+        data,
+      });
+    } catch (error) {
+      console.log(error);
+    }
+  },
+
+  async getDistrictsByState(req, res) {
+    try {
+      const state = req.params.state;
+      const data = await MarketData.distinct("districtName", {
+        stateName: state,
+      });
+
+      res.status(200).json({
+        success: true,
+        message: "Received All Districts",
+        data,
+      });
+    } catch (error) {
+      console.log(error);
+    }
+  },
+
+  async getAllMarkets(req, res) {
+    try {
+      const market = await MarketData.distinct("marketName");
+
+      res.status(200).json({
+        success: true,
+        message: "Received All Market",
+        data: market,
+      });
+    } catch (error) {}
+  },
+
+  async getMarketsByDistrict(req, res) {
+    try {
+      const district = req.params.district;
+      const data = await MarketData.distinct("marketName", {
+        districtName: district,
+      });
+
+      res.status(200).json({
+        success: true,
+        message: "Received Market",
+        data,
+      });
+    } catch (error) {}
+  },
 };
 
 module.exports = userController;
