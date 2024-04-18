@@ -2,6 +2,7 @@ import axios, { AxiosError } from "axios";
 import React, { useState } from "react";
 import { toast } from "react-toastify";
 import { useNavigate } from "react-router-dom";
+import config from "../../config";
 
 const SetupAdmin = ({ setAppState }) => {
   const [email, setEmail] = useState("");
