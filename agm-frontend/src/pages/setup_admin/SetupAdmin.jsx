@@ -10,15 +10,10 @@ const SetupAdmin = ({ setAppState }) => {
   const navigate = useNavigate();
   const handleSubmit = async () => {
     try {
-      const response = await axios.post(
-        process.env.NODE_ENV === "production"
-          ? "/api/auth/register"
-          : "http://localhost:3000/api/auth/register",
-        {
-          email,
-          password,
-        }
-      );
+      const response = await axios.post(config.API_URL + "/auth/register", {
+        email,
+        password,
+      });
 
       if (response.data.success) {
         toast.success(response.data.message);

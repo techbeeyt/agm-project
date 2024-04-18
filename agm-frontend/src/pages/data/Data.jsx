@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import axios from "axios";
 import { toast } from "react-toastify";
+import config from "../../config";
 
 const Data = () => {
   const [file, setFile] = useState(null);
@@ -22,9 +23,7 @@ const Data = () => {
       form.append("file", file);
 
       const response = await axios.post(
-        process.env.NODE_ENV === "production"
-          ? "/api/admin/upload"
-          : "http://localhost:3000/api/admin/upload",
+        config.API_URL + "/admin/upload",
         form,
         {
           headers: {
@@ -45,9 +44,7 @@ const Data = () => {
     try {
       const res = await toast.promise(
         axios.delete(
-          process.env.NODE_ENV === "production"
-            ? `/api/admin/data/${result[selectedToEdit]._id}`
-            : `http://localhost:3000/api/admin/data/${result[selectedToEdit]._id}`,
+          config.API_URL + `/admin/data/${result[selectedToEdit]._id}`,
           dataToChange,
           { withCredentials: true }
         ),
@@ -84,9 +81,7 @@ const Data = () => {
     try {
       const res = await toast.promise(
         axios.put(
-          process.env.NODE_ENV === "production"
-            ? `/api/admin/data/${result[selectedToEdit]._id}`
-            : `http://localhost:3000//api/admin/data/${result[selectedToEdit]._id}`,
+          config.API_URL + `/admin/data/${result[selectedToEdit]._id}`,
           dataToChange,
           { withCredentials: true }
         ),

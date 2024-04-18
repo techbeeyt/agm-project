@@ -2,6 +2,7 @@ import axios, { AxiosError } from "axios";
 import React, { useState } from "react";
 import { toast } from "react-toastify";
 import { useNavigate } from "react-router-dom";
+import config from "../../config";
 
 const Login = ({ setAppState }) => {
   const [email, setEmail] = useState("");
@@ -11,9 +12,7 @@ const Login = ({ setAppState }) => {
   const handleSubmit = async () => {
     try {
       const response = await axios.post(
-        process.env.NODE_ENV === "production"
-          ? "/api/auth/login"
-          : "http://localhost:3000/api/auth/login",
+        config.API_URL + "/auth/login",
         {
           email,
           password,
