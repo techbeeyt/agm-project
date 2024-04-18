@@ -13,6 +13,7 @@ import "react-toastify/dist/ReactToastify.css";
 import Login from "./pages/login/Login";
 import Layout from "./components/Layout";
 import Data from "./pages/data/Data";
+import config from "./config";
 
 function App() {
   const [appState, setAppState] = useState("init"); // "init" | "no_admin" | "logged_in" | "logged_out"
@@ -23,7 +24,7 @@ function App() {
   useEffect(() => {
     try {
       axios
-        .get("http://localhost:3000/api/auth/status", { withCredentials: true })
+        .get(config.API_URL + "/auth/status", { withCredentials: true })
         .then((res) => {
           setAppState(res.data.status);
         });
