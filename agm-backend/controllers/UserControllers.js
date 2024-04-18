@@ -6,7 +6,7 @@ const userController = {
     try {
       const { date, crop } = req.query;
 
-      const formattedDate = moment(date).format("DD-MM-YYYY");
+      const formattedDate = moment(date, "DD-MM-YYYY").toDate();
 
       if (!date || !crop)
         res.status(400).json({
@@ -43,7 +43,7 @@ const userController = {
     try {
       const { date, state, district, market } = req.query;
 
-      const formattedDate = moment(date).format("DD-MM-YYYY");
+      const formattedDate = moment(date, "DD-MM-YYYY").toDate();
 
       console.log(
         !date || !state || !district || !market,
