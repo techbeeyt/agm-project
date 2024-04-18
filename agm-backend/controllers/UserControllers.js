@@ -5,8 +5,9 @@ const userController = {
   async getCrop(req, res) {
     try {
       const { date, crop } = req.query;
+      let _date = new Date(date);
 
-      const formattedDate = moment(date, "DD-MM-YYYY").toDate();
+      console.log(_date);
 
       if (!date || !crop)
         res.status(400).json({
@@ -17,13 +18,14 @@ const userController = {
 
       const data = await MarketData.find({
         $and: [
-          { date: formattedDate },
+          {
+            date: _date,
+          },
           {
             itemName: crop,
           },
         ],
       });
-      console.log(data);
       res.status(200).json({
         success: true,
         message: "Received Crop Data",
@@ -43,15 +45,8 @@ const userController = {
     try {
       const { date, state, district, market } = req.query;
 
-      const formattedDate = moment(date, "DD-MM-YYYY").toDate();
+      const formattedDate = new Date(date);
 
-      console.log(
-        !date || !state || !district || !market,
-        date,
-        state,
-        district,
-        market
-      );
       if (!date || !state || !district || !market) {
         return res.status(400).json({
           success: false,
@@ -59,6 +54,8 @@ const userController = {
           data: [],
         });
       }
+
+      console.log(date, state, district, market);
 
       const data = await MarketData.find({
         $and: [
@@ -78,7 +75,7 @@ const userController = {
       });
       res.status(200).json({
         success: true,
-        message: "Received Crop Data",
+        message: "Received Yard Data",
         data,
       });
     } catch (error) {
@@ -94,7 +91,6 @@ const userController = {
   async getStates(req, res) {
     try {
       const states = await MarketData.distinct("stateName");
-      console.log("states", states);
       res.status(200).json({
         success: true,
         message: "Received States",

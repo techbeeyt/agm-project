@@ -5,7 +5,7 @@ const moment = require("moment");
 const uploadExcelFile = async (req, res) => {
   try {
     // get date and item name first;
-    const date = moment(req.body.date, "YYYY-MM-DD").toDate();
+    const date = new Date(req.body.date);
 
     const itemName = req.body.itemName;
 
