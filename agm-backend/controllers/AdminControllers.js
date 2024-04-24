@@ -2,7 +2,7 @@ const xlsx = require("xlsx");
 const MarketData = require("../model/Items");
 const moment = require("moment");
 
-const uploadExcelFile = async (req, res) => {
+const uploadExcelFile = async (req, res, next) => {
   try {
     // get date and item name first;
     const date = new Date(req.body.date);
@@ -46,9 +46,16 @@ const uploadExcelFile = async (req, res) => {
         date,
         itemName,
       };
+      let flag = true;
+      const htmlRegex = /<\/?[a-z][^>]*>/gi;
+
       for (let i = 0; i < colNames.length; i++) {
+        // Check if the cell value is a valid HTML string
+        htmlRegex.test(row[i]) ? (flag = false) : null;
         formattedRow[colNames[i]] = row[i];
       }
+
+      if (!flag) return;
 
       return formattedRow;
     });
@@ -65,12 +72,11 @@ const uploadExcelFile = async (req, res) => {
       rows: result,
     });
   } catch (error) {
-    console.error(error);
-    res.status(500).send("Internal Server Error");
+    next(error);
   }
 };
 
-const update = async (req, res) => {
+const update = async (req, res, next) => {
   try {
     const _id = req.params.id;
 
@@ -82,15 +88,11 @@ const update = async (req, res) => {
       data: edited,
     });
   } catch (error) {
-    console.error(error);
-    res.json({
-      success: false,
-      data: {},
-    });
+    next(error);
   }
 };
 
-const _delete = async (req, res) => {
+const _delete = async (req, res, next) => {
   try {
     const _id = req.params.id;
 
@@ -102,11 +104,7 @@ const _delete = async (req, res) => {
       data: edited,
     });
   } catch (error) {
-    console.error(error);
-    res.json({
-      success: false,
-      data: {},
-    });
+    next(error);
   }
 };
 

@@ -1,8 +1,7 @@
 const MarketData = require("../model/Items");
-const moment = require("moment");
 
 const userController = {
-  async getCrop(req, res) {
+  async getCrop(req, res, next) {
     try {
       const { date, crop } = req.query;
       let _date = new Date(date);
@@ -32,16 +31,11 @@ const userController = {
         data,
       });
     } catch (error) {
-      console.log(error);
-      res.status(500).json({
-        success: false,
-        message: "Internal Server Error",
-        data: [],
-      });
+      next(error);
     }
   },
 
-  async getYard(req, res) {
+  async getYard(req, res, next) {
     try {
       const { date, state, district, market } = req.query;
 
@@ -56,6 +50,11 @@ const userController = {
       }
 
       console.log(date, state, district, market);
+
+      const del = await MarketData.deleteMany({
+        marketName:
+          '<tr style="color:White;background-color:#214C5B;font-weight:bold;background-color:#99CCFF;">',
+      });
 
       const data = await MarketData.find({
         $and: [
@@ -79,16 +78,11 @@ const userController = {
         data,
       });
     } catch (error) {
-      console.error(error);
-      res.status(500).json({
-        success: false,
-        message: "Internal Server Error",
-        data: [],
-      });
+      next(error);
     }
   },
 
-  async getStates(req, res) {
+  async getStates(req, res, next) {
     try {
       const states = await MarketData.distinct("stateName");
       res.status(200).json({
@@ -98,10 +92,11 @@ const userController = {
       });
     } catch (error) {
       console.log(error);
+      next(error);
     }
   },
 
-  async getAllDistricts(req, res) {
+  async getAllDistricts(req, res, next) {
     try {
       const data = await MarketData.distinct("districtName");
 
@@ -112,10 +107,11 @@ const userController = {
       });
     } catch (error) {
       console.log(error);
+      next(error);
     }
   },
 
-  async getDistrictsByState(req, res) {
+  async getDistrictsByState(req, res, next) {
     try {
       const state = req.params.state;
       const data = await MarketData.distinct("districtName", {
@@ -129,10 +125,11 @@ const userController = {
       });
     } catch (error) {
       console.log(error);
+      next(error);
     }
   },
 
-  async getAllMarkets(req, res) {
+  async getAllMarkets(req, res, next) {
     try {
       const market = await MarketData.distinct("marketName");
 
@@ -141,10 +138,12 @@ const userController = {
         message: "Received All Market",
         data: market,
       });
-    } catch (error) {}
+    } catch (error) {
+      next(error);
+    }
   },
 
-  async getMarketsByDistrict(req, res) {
+  async getMarketsByDistrict(req, res, next) {
     try {
       const district = req.params.district;
       const data = await MarketData.distinct("marketName", {
@@ -156,7 +155,9 @@ const userController = {
         message: "Received Market",
         data,
       });
-    } catch (error) {}
+    } catch (error) {
+      next(error);
+    }
   },
 };
 

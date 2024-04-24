@@ -18,7 +18,6 @@ const authController = {
 
       // verify the token
       const token = req.cookies?.admin_token;
-      console.log(req.cookies);
       if (!token) {
         return res.json({
           success: false,

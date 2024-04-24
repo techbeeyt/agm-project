@@ -12,6 +12,8 @@ const Data = () => {
   const [selectedToEdit, setSelectedToEdit] = useState(null);
   const [dataToChange, setDataToChange] = useState({});
 
+  const [status, setStatus] = useState("init"); // init || uploading || success || error
+
   const handleSubmit = async () => {
     try {
       if (!file || !date) {
@@ -21,6 +23,8 @@ const Data = () => {
       form.append("date", date);
       form.append("itemName", item);
       form.append("file", file);
+
+      setStatus("uploading");
 
       const response = await axios.post(
         config.API_URL + "/admin/upload",
@@ -32,7 +36,7 @@ const Data = () => {
           withCredentials: true,
         }
       );
-      console.log(response);
+      setStatus("success");
       setResult(response.data.rows);
     } catch (error) {
       console.log(error);
@@ -396,8 +400,18 @@ const Data = () => {
               setFile(e.target.files[0]);
             }}
           />
-          <button className="btn btn-primary w-full" onClick={handleSubmit}>
-            Upload
+          <button
+            className="btn btn-primary w-full"
+            onClick={handleSubmit}
+            disabled={status === "uploading" || status === "success"}
+          >
+            {status === "init"
+              ? "Upload"
+              : status === "uploading"
+              ? "Uploading..."
+              : status === "success"
+              ? "Uploaded"
+              : "Upload"}
           </button>
         </div>
       )}
