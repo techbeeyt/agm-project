@@ -16,7 +16,7 @@ import Data from "./pages/data/Data";
 import config from "./config";
 
 function App() {
-  const [appState, setAppState] = useState("logged_in"); // "init" | "no_admin" | "logged_in" | "logged_out"
+  const [appState, setAppState] = useState("init"); // "init" | "no_admin" | "logged_in" | "logged_out"
   useEffect(() => {});
 
   const navigate = useNavigate();
