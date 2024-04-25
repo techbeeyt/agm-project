@@ -1,14 +1,18 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { toast } from "react-toastify";
 import config from "../../config";
 import item_list from "../../assets/json/item_list.json";
+import month_day from "../../assets/json/month_day.json";
 import { IoClose } from "react-icons/io5";
 
 const Data = () => {
   const [file, setFile] = useState(null);
-  const [date, setDate] = useState("");
   const [item, setItem] = useState("");
+
+  const [selectedMonth, setSelectedMonth] = useState(month_day[0].number);
+  const [date, setDate] = useState("");
+  const [year, setYear] = useState(new Date().getFullYear());
 
   const [itemNameSuggestion, setItemNameSuggestion] = useState([]);
   const [showSuggestion, setShowSuggestion] = useState(false);
@@ -25,7 +29,7 @@ const Data = () => {
         return alert("Please enter date and file");
       }
       const form = new FormData();
-      form.append("date", date);
+      form.append("date", `${selectedMonth}-${date}-${year}`);
       form.append("itemName", item);
       form.append("file", file);
 
@@ -109,6 +113,10 @@ const Data = () => {
       console.log(error);
     }
   };
+
+  useEffect(() => {
+    console.log(selectedMonth);
+  }, [selectedMonth]);
 
   return (
     <div className="p-6 w-full flex flex-col justify-start items-center gap-4">
@@ -380,14 +388,50 @@ const Data = () => {
           <h1 className="w-full text-center font-semibold">
             Upload Your Excel File
           </h1>
-          <input
-            type="date"
-            className="input input-bordered input-success w-full accent-green-700"
-            onChange={(e) => {
-              setDate(e.target.value);
-            }}
-            value={date}
-          />
+
+          <div className="w-full rounded-md flex justify-between items-center">
+            <select
+              className="bg-success px-3 py-3 rounded-md font-semibold"
+              onChange={(e) => {
+                setSelectedMonth(e.target.value);
+              }}
+            >
+              {month_day.map((item, index) => {
+                return <option key={index}>{item.number}</option>;
+              })}
+            </select>
+            <select className="bg-success px-3 py-3 rounded-md font-semibold">
+              {month_day
+                .filter((item) => {
+                  return item.number === selectedMonth;
+                })[0]
+                .days.map((item, index) => {
+                  return (
+                    <option
+                      key={index}
+                      value={item}
+                      onChange={(e) => {
+                        setDate(e.target.value);
+                      }}
+                    >
+                      {item}
+                    </option>
+                  );
+                })}
+            </select>
+            <select
+              className="bg-success px-3 py-3 rounded-md font-semibold"
+              onChange={(e) => setYear(e.target.value)}
+            >
+              {Array.from({ length: 100 }, (_, i) => {
+                return (
+                  <option key={i} value={new Date().getFullYear() - i}>
+                    {new Date().getFullYear() - i}
+                  </option>
+                );
+              })}
+            </select>
+          </div>
           <div className="w-full relative">
             <input
               type="text"
