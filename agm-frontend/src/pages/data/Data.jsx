@@ -2,11 +2,16 @@ import React, { useState } from "react";
 import axios from "axios";
 import { toast } from "react-toastify";
 import config from "../../config";
+import item_list from "../../assets/json/item_list.json";
+import { IoClose } from "react-icons/io5";
 
 const Data = () => {
   const [file, setFile] = useState(null);
   const [date, setDate] = useState("");
   const [item, setItem] = useState("");
+
+  const [itemNameSuggestion, setItemNameSuggestion] = useState([]);
+  const [showSuggestion, setShowSuggestion] = useState(false);
 
   const [result, setResult] = useState([]);
   const [selectedToEdit, setSelectedToEdit] = useState(null);
@@ -383,19 +388,61 @@ const Data = () => {
             }}
             value={date}
           />
-          <input
-            type="text"
-            placeholder="Item Name"
-            className="input input-bordered input-success w-full max-w-xs"
-            onChange={(e) => {
-              setItem(e.target.value);
-            }}
-            value={item}
-          />
+          <div className="w-full relative">
+            <input
+              type="text"
+              placeholder="Item Name"
+              className="input input-bordered input-success w-full"
+              onChange={(e) => {
+                const filtered = item_list.filter((item) => {
+                  const regexp = new RegExp(e.target.value);
+                  return item.item_name.match(regexp);
+                });
+                console.log(filtered);
+                if (e.target.value.length > 0) {
+                  setItemNameSuggestion(filtered);
+                } else {
+                  setItemNameSuggestion([]);
+                }
+                setItem(e.target.value);
+              }}
+              onFocus={() => setShowSuggestion(true)}
+              // onBlur={() => setShowSuggestion(false)}
+              value={item}
+            />
+
+            {showSuggestion ? (
+              <div className="absolute top-[120%] left-0 w-full bg-white shadow-xl max-h-[200px] overflow-auto rounded">
+                <div className="px-3 py-1 font-semibold flex justify-between">
+                  <span>Suggestions</span>{" "}
+                  <button onClick={() => setShowSuggestion(false)}>
+                    <IoClose />
+                  </button>
+                </div>
+                <div>
+                  {itemNameSuggestion.map((item, index) => {
+                    return (
+                      <button
+                        key={`item${index}`}
+                        className="px-3 py-1 w-full text-left hover:bg-gray-50"
+                        onClick={() => {
+                          setItem(item.item_name);
+                          setShowSuggestion(false);
+                        }}
+                      >
+                        {item.item_name}
+                      </button>
+                    );
+                  })}
+                </div>
+              </div>
+            ) : null}
+          </div>
+
           <input
             type="file"
             className="file-input file-input-bordered file-input-success"
-            accept="xlsx"
+            accept=".xlsx"
             onChange={(e) => {
               setFile(e.target.files[0]);
             }}
