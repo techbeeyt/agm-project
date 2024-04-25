@@ -395,8 +395,8 @@ const Data = () => {
               className="input input-bordered input-success w-full"
               onChange={(e) => {
                 const filtered = item_list.filter((item) => {
-                  const regexp = new RegExp(e.target.value);
-                  return item.item_name.match(regexp);
+                  const regexp = new RegExp(e.target.value.toLocaleLowerCase());
+                  return item.item_name.toLocaleLowerCase().match(regexp);
                 });
                 console.log(filtered);
                 if (e.target.value.length > 0) {
